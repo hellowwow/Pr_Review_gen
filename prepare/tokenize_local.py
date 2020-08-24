@@ -19,6 +19,11 @@ def english_token(sentence, tokenize_flag=1, is_filter_stopword=1, stem_flag=1, 
         source_tokens = tokenizer.tokenize(sentence)
     # print(source_tokens)
 
+    # 删除标点符号
+    for token in source_tokens[::-1]:
+        if len(token) == 1 and token[0].isalpha() == False:
+            source_tokens.remove(token)
+
     # 过滤停用词
     if is_filter_stopword:
         list_stopWords = list(set(corpus.stopwords.words('english')))
@@ -88,12 +93,16 @@ def code_token(code_diff):
     lexer = lexers.get_lexer_by_name("java", stripall=True)
     tokens = list(pygments.lex(code_diff, lexer))
     # tokens = list(javalang.tokenizer.tokenize(code_diff))
-    return tokens
+    tokens_list = []
+    for token in tokens:
+        if str(token[0]) != 'Token.Text' and str(token[0]) != 'Token.Punctuation':
+            tokens_list.append(token[1].lower())
+    return tokens_list
 
 def test():
     # 测试英文令牌化
-    # example_text = "was ate Five score years ago, a great American, in whose symbolic shadow we stand today, signed the Emancipation Proclamation. This momentous decree came as a great beacon light of hope to millions of Negro slaves who had been seared in the flames of withering injustice. It came as a joyous daybreak to end the long night of bad captivity."
-    # print(english_token(example_text, 2, 2, 2))
+    example_text = "was ate Five score years ago, a great American, in whose symbolic shadow we stand today, signed the Emancipation Proclamation. This momentous decree came as a great beacon light of hope to millions of Negro slaves who had been seared in the flames of withering injustice. It came as a joyous daybreak to end the long night of bad captivity."
+    print(english_token(example_text, 2, 2, 2))
 
     # 测试代码令牌化
     example_text = 'System.out.println("Hello " + "world");'

@@ -1,18 +1,18 @@
 #数据分析
 import pickle
 import csv
-import embaging
+from src.prepare import tokenize_local
 
 comment_max_len = 1000
 code_max_len = 10000
 
 # todo:如何更好的度量代码的长度，令牌方式    word2vec嵌入编码
 def comment_length(review):
-    return len(embaging.english_token(review, 2, 0, 2, 2))
-    return len(review.split())
+    return len(tokenize_local.english_token(review, 2, 0, 2, 2))
+    # return len(review.split())
 
 def code_length(code_diff):
-    tokens = embaging.code_token(code_diff)
+    tokens = tokenize_local.code_token(code_diff)
     length = 0
     for token in tokens:
         if str(token[0]) != 'Token.Text' and str(token[0]) != 'Token.Punctuation':
