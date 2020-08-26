@@ -1,7 +1,7 @@
 #数据分析
 import pickle
 import csv
-from src.prepare import tokenize_local
+from prepare import tokenize_local
 
 comment_max_len = 1000
 code_max_len = 10000
