@@ -5,7 +5,6 @@ from nltk import word_tokenize
 from nltk import stem
 from nltk import corpus
 from nltk import pos_tag
-import javalang
 import pygments
 from pygments import lexers
 from pygments.lexers import jvm

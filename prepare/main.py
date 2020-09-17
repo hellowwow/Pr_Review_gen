@@ -1,4 +1,5 @@
 import pickle
+import json
 from prepare import extract
 from prepare import filter
 from prepare import tokenize_local
@@ -42,16 +43,23 @@ def prepare():
             for data_map in data_list:
                 core_data = {}
                 core_data['repo'] = data_map['owner'] + ':' + data_map['repo']
-                core_data['code_diff'] = data_map['code_diff']
-                core_data['comment'] = data_map['comment']
-                core_data['code_diff_token'] = tokenize_local.english_token(core_data['code_diff'])
-                core_data['comment_token'] = tokenize_local.english_token(core_data['comment'])
+                core_data['code_diff'] = data_map['code_diff'].lower()
+                core_data['comment'] = data_map['comment'].lower()
+                replace_str = '¹²³⑥⑦۸\t\n\r'
+                for char_ in replace_str:
+                    core_data['code_diff'] =  core_data['code_diff'].replace(char_, '')
+                    core_data['comment'] = core_data['comment'].replace(char_, '')
+                core_data['code_diff_token'] = tokenize_local.code_token(core_data['code_diff'])
+                core_data['comment_token'] = tokenize_local.english_token(core_data['comment'], 2, 0, 2, 2)
                 if is_filter_length and (check_length(core_data['comment_token'], core_data['code_diff_token']) == False or check_is_empty(core_data['code_diff_token']) == True):
                     continue
                 core_data_list.append(core_data)
         print("源数据数：", len(data_list))
         print("现数据数：", len(core_data_list))
-        with open(core_data_file, 'wb') as write_file:
-            pickle.dump(core_data_list, write_file)
+        # with open(core_data_file, 'wb') as write_file:
+        #     pickle.dump(core_data_list, write_file)
+        with open(core_data_file, 'w+', encoding='utf-8') as write_file:
+            json.dump(core_data_list, write_file)
 
-prepare()
+if __name__ == '__main__':
+    prepare()
